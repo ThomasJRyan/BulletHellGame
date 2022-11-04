@@ -27,7 +27,7 @@ func _physics_process(delta):
 		
 func fire(pos):
 	fire_direction = (pos - position).normalized() * speed
-	print(fire_direction)
+#	print(fire_direction)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

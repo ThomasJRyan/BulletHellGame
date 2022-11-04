@@ -4,8 +4,12 @@ extends KinematicBody2D
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-export var speed = 10
+export var max_speed = 150
+export var speed_step = 4
+var current_speed = 0
+
 export(PackedScene) var bullet_scene
+var velocity = Vector2()
 
 var inputs = {
 	"MoveUp": Vector2.UP,
@@ -27,15 +31,17 @@ func _ready():
 #			move(direction)
 
 func move_player():
-	look_at(get_global_mouse_position())
+	var mouse_position = get_global_mouse_position()
+	look_at(mouse_position)
 	
-	var velocity = Vector2()
-	velocity.y += 1 if Input.is_action_pressed("MoveDown") else 0
-	velocity.y -= 1 if Input.is_action_pressed("MoveUp") else 0
-	velocity.x += 1 if Input.is_action_pressed("MoveRight") else 0
-	velocity.x -= 1 if Input.is_action_pressed("MoveLeft") else 0
+	velocity = Vector2()
 	
-	move_and_collide(velocity.normalized() * speed)
+	if Input.is_action_pressed("MoveUp"):
+		current_speed += speed_step if current_speed <= max_speed else 0
+	else:
+		current_speed -= speed_step / 2 if current_speed > 0 else 0
+	
+	velocity = Vector2(current_speed, 0).rotated(rotation)
 	
 	var screensize = get_viewport().size
 	position.x = clamp(position.x, 0, screensize.x)
@@ -53,6 +59,8 @@ func fire_bullet():
 			
 func _physics_process(delta):
 	move_player()
+	velocity = move_and_slide(velocity)
+#	position.move_toward(velocity, delta * max_speed)
 	
 func _input(event):
 	if event.is_action_pressed("Fire"):

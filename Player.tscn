@@ -18,12 +18,14 @@ animations = [ {
 } ]
 
 [sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 5.625, 5.6962 )
 
 [node name="Player" type="KinematicBody2D"]
 script = ExtResource( 1 )
 bullet_scene = ExtResource( 3 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+rotation = 1.57079
 frames = SubResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
